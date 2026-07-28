@@ -29,14 +29,18 @@ class V100Device:
 
         self._device.set_socketPersistent(True)
 
+        self._dps: dict = {}
+
     def status(self) -> dict:
         """Read DPS."""
         result = self._device.status()
-        return result.get("dps", {})
+        self._dps = result.get("dps", {})
+        return self._dps
 
-    def is_open(self) -> bool:
-        """Lock state."""
-        return self.status().get("148", False)
+    @property
+    def dps(self) -> dict:
+        """Last received DPS."""
+        return self._dps
 
     def open_lock(self):
         """Open lock."""
