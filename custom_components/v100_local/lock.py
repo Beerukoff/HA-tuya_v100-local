@@ -39,8 +39,8 @@ class V100Lock(LockEntity):
         self._attr_unique_id = f"{name}_lock"
 
     @property
-    def is_locked(self):
-        return not self._device.is_open()
+        def is_locked(self):
+            return not self._is_locked
 
     async def async_unlock(self, **kwargs):
         await self.hass.async_add_executor_job(
