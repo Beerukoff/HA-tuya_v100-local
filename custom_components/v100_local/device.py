@@ -22,16 +22,26 @@ class V100Device:
             local_key,
         )
 
-        self._device.set_version(float(version))
+        try:
+            self._device.set_version(float(version))
+        except (TypeError, ValueError):
+            self._device.set_version(3.4)
+
         self._device.set_socketPersistent(True)
 
-    def status(self):
+    def status(self) -> dict:
         """Read DPS."""
-        return self._device.status()
+        result = self._device.status()
+        return result.get("dps", {})
+
+    def is_open(self) -> bool:
+        """Lock state."""
+        return self.status().get("148", False)
 
     def open_lock(self):
         """Open lock."""
         return self._device.set_value(148, True)
 
-    def close(self):
+    def disconnect(self):
+        """Close connection."""
         self._device.close()
