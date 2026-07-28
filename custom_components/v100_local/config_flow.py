@@ -1,15 +1,17 @@
 """Config flow for V100 Local."""
 
+from __future__ import annotations
+
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.core import callback
+from homeassistant.const import CONF_IP_ADDRESS
 
-from .const import DOMAIN, CONF_HOST, CONF_PORT, DEFAULT_PORT
+from .const import DOMAIN
 
 
 class V100LocalConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for V100 Local."""
+    """Handle a config flow."""
 
     VERSION = 1
 
@@ -18,17 +20,16 @@ class V100LocalConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             return self.async_create_entry(
-                title=f"V100 {user_input[CONF_HOST]}",
+                title="V100 Lock",
                 data=user_input,
             )
 
         schema = vol.Schema(
             {
-                vol.Required(CONF_HOST): str,
-                vol.Optional(
-                    CONF_PORT,
-                    default=DEFAULT_PORT,
-                ): int,
+                vol.Required(CONF_IP_ADDRESS): str,
+                vol.Required("device_id"): str,
+                vol.Required("local_key"): str,
+                vol.Optional("version", default="3.4"): str,
             }
         )
 
